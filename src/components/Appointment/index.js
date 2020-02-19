@@ -19,7 +19,8 @@ export default function Appointment(props){
       student:name,
       interviewer
     }
-    props.bookInterview(interviewer, interview)
+    props.bookInterview(props.id, interview)
+    transition(SHOW);
   }
 
   return (
