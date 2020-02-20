@@ -4,50 +4,49 @@ import axios from "axios";
 const SET_DAY = "SET_DAY";
 const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 const SET_INTERVIEW = "SET_INTERVIEW";
-const ADD_SPOT = "ADD_SPOT";
-const REMOVE_SPOT = "REMOVE_SPOT";
+
+const reducer = (state, action) => {
+  switch(action.type){
+    case SET_DAY:
+      return {...state, ...action.value}
+
+    case SET_APPLICATION_DATA:
+      return {...state, ...action.value}
+
+    case SET_INTERVIEW: {
+      const {id, interview, updateSpots} = action.value;
+
+      //Handle updating spots
+      let newDays = state.days;
+
+      if(updateSpots && interview === null){
+        newDays = state.days.map(day => day.appointments.includes(id) ? {...day, spots: day.spots + 1} : day);
+      } else if(updateSpots && state.appointments[id].interview === null){
+        newDays = state.days.map(day => day.appointments.includes(id) ? {...day, spots: day.spots - 1} : day);
+      }
+
+      //build new appoitnments object
+      const appointment = {
+        ...state.appointments[id],
+        interview: interview
+      };
+          
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      return {...state, appointments, days: newDays}
+    }
+    
+    default:
+      throw new Error(
+        `Tried to reduce with unsupported action type: ${action.type}`
+      );
+  }
+}
 
 
 export default function useApplicationData(){
-  const reducer = (state, action) => {
-    switch(action.type){
-      case SET_DAY:
-        return {...state, ...action.value}
-  
-      case SET_APPLICATION_DATA:
-        return {...state, ...action.value}
-  
-      case SET_INTERVIEW: {
-  
-        const appointment = {
-          ...state.appointments[action.value.id],
-          interview: action.value.interview
-        };
-            
-        const appointments = {
-          ...state.appointments,
-          [action.value.id]: appointment
-        };
-  
-        return {...state, appointments}
-      }
-  
-      case ADD_SPOT: {
-        const updatedDays = state.days.map(day => day.name === state.day ? {...day, spots: day.spots + 1} : day);
-        return {...state, days: updatedDays}
-      }
-  
-      case REMOVE_SPOT: {
-        const updatedDays = state.days.map(day => day.name === state.day ? {...day, spots: day.spots - 1} : day);
-        return {...state, days: updatedDays}
-      }
-      
-      default:
-        throw new Error(
-          `Tried to reduce with unsupported action type: ${action.type}`
-        );
-    }
-  }
   
   const [state, dispatch] = useReducer(reducer, {days: [], appointments: {}, interviewers: {}, day: ""});
   
@@ -68,13 +67,14 @@ export default function useApplicationData(){
   }, [])
 
   useEffect(() => {
-    const webSocket = new WebSocket("ws://localhost:8001");
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
     
     webSocket.onmessage = function(event){
       const msg = JSON.parse(event.data);
 
       if(msg.type === "SET_INTERVIEW"){
-        dispatch({type: SET_INTERVIEW, value: {interview: msg.interview, id:msg.id}})
+        //update spots in the socket connection
+        dispatch({type: SET_INTERVIEW, value: {interview: msg.interview, id:msg.id, updateSpots:true}})
       }
     }
   }, [])
@@ -87,9 +87,6 @@ export default function useApplicationData(){
       interview
     })
       .then(res => {
-        if(!state.appointments[id].interview){
-          dispatch({type: REMOVE_SPOT})
-        }
         dispatch({type: SET_INTERVIEW, value: {id, interview}})
       });
   }
@@ -99,7 +96,6 @@ export default function useApplicationData(){
     return axios.delete(`/api/appointments/${id}`)
       .then(res => {
         dispatch({type: SET_INTERVIEW, value: {id, interview:null}})
-        dispatch({type: ADD_SPOT});
       });  
   }
   return {state, setDay, bookInterview, cancelInterview}
