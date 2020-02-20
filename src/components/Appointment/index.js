@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./styles.scss";
 import Header from "./Header";
 import Empty from "./Empty";
@@ -24,7 +24,17 @@ const ERROR_NO_INTERVIEWER = "ERROR_NO_INTERVIEWER";
 
 export default function Appointment(props){
   const {mode, transition, back} = useVisualMode(props.interview ? SHOW : EMPTY);
-  transition(props.interview ? SHOW : EMPTY);
+
+  //conditional checks in case of API update
+  useEffect(() => {
+    if(mode === "EMPTY" && props.interview){
+      transition("SHOW");
+    }
+    if(mode === "SHOW" && !props.interview){
+      transition("EMPTY");
+    }
+  }, [props.interview]);
+
   function save(name, interviewer){
 
     if(!interviewer){
