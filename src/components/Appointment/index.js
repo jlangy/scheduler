@@ -25,6 +25,8 @@ const ERROR_NO_INTERVIEWER = "ERROR_NO_INTERVIEWER";
 export default function Appointment(props){
   const {mode, transition, back} = useVisualMode(props.interview ? SHOW : EMPTY);
 
+  console.log(mode);
+
   function save(name, interviewer){
 
     if(!interviewer){
@@ -44,7 +46,7 @@ export default function Appointment(props){
   function cancel(){
     transition(DELETING, true)
     props.cancelInterview(props.id)
-      .then(() => { console.log('hi'); return transition(EMPTY);})
+      .then(() => transition(EMPTY))
       .catch(() => transition(ERROR_DELETE, true));
   }
 
