@@ -16,11 +16,6 @@ export default function Form(props){
     reset();
   }
 
-  // function save(){
-  //   props.onSave();
-  //   reset();
-  // }
-
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
