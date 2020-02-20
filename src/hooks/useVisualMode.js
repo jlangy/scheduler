@@ -5,6 +5,9 @@ export default function useVisualMode(initialMode){
   const [history, setHistory] = useState([initialMode]);
 
   const transition = (newMode, replace=false) => {
+    if(newMode === "EMPTY"){
+      console.log("newmode is empty in transition")
+    }
     setMode(newMode)
     if(replace){
       setHistory(prevHistory => [...prevHistory.slice(0, prevHistory.length - 1), newMode]);
