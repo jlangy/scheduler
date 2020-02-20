@@ -19,12 +19,18 @@ const CONFIRM = "CONFIRM";
 const EDITING = "EDITING";
 const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
+const ERROR_NO_INTERVIEWER = "ERROR_NO_INTERVIEWER";
 
 
 export default function Appointment(props){
   const {mode, transition, back} = useVisualMode(props.interview ? SHOW : EMPTY);
 
   function save(name, interviewer){
+
+    if(!interviewer){
+      return transition(ERROR_NO_INTERVIEWER) 
+    }
+
     const interview = {
       student:name,
       interviewer
@@ -56,6 +62,7 @@ export default function Appointment(props){
         {mode === DELETING && <Status  message={DELETING}/>}
         {mode === ERROR_SAVE && <Error  message={"Server error while saving. Please try again"} onClose={back}/>}
         {mode === ERROR_DELETE && <Error  message="Server error while deleting. Please try again" onClose={back}/>}
+        {mode === ERROR_NO_INTERVIEWER && <Error  message="You must select an interviewer to book an appointment" onClose={back}/>}
         {mode === CONFIRM && <Confirm  onCancel={back} onConfirm={cancel} message="Are you sure you want to delete?" />}
       </article>
   )
