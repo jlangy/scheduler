@@ -25,19 +25,19 @@ export default function useApplicationData() {
       });
   }, [])
 
-  // useEffect(() => {
-  //   // const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
-  //   const webSocket = new WebSocket('ws://localhost:8001');
+  useEffect(() => {
+    // const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL);
+    const webSocket = new WebSocket('ws://localhost:8001');
 
-  //   webSocket.onmessage = function (event) {
-  //     const msg = JSON.parse(event.data);
+    webSocket.onmessage = function (event) {
+      const msg = JSON.parse(event.data);
 
-  //     if (msg.type === "SET_INTERVIEW") {
-  //       //update spots in the socket connection
-  //       dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, updateSpots: true } })
-  //     }
-  //   }
-  // }, [])
+      if (msg.type === "SET_INTERVIEW") {
+        //update spots in the socket connection
+        dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, updateSpots: true } })
+      }
+    }
+  }, [])
 
   const setDay = day => dispatch({ type: SET_DAY, value: { day } });
 
@@ -47,7 +47,7 @@ export default function useApplicationData() {
       interview
     })
       .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview, updateSpots:true } })
+        dispatch({ type: SET_INTERVIEW, value: { id, interview} })
       });
   }
 
@@ -55,7 +55,7 @@ export default function useApplicationData() {
 
     return axios.delete(`/api/appointments/${id}`)
       .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview: null, updateSpots:true } })
+        dispatch({ type: SET_INTERVIEW, value: { id, interview: null} })
       });
   }
   return { state, setDay, bookInterview, cancelInterview }
