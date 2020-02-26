@@ -8,8 +8,15 @@ Interview scheduler is a full stack web application built with Node and React to
 ## Setup
 
 Install dependencies with `npm install`.
+For API, use https://github.com/jlangy/scheduler-api.
 
 ## Running Webpack Development Server
+
+```sh
+npm start
+```
+
+### In Server
 
 ```sh
 npm start
