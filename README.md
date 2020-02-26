@@ -3,7 +3,7 @@
 Interview scheduler is a full stack web application built with Node and React to schedule appointments. 
 
 
-!['Application'](https://github.com/jlangy/tinyapp/blob/master/docs/singleURL.png)
+!['Application'](https://github.com/jlangy/scheduler/blob/master/docs/readme.png)
 
 ## Setup
 
