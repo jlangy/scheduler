@@ -5,11 +5,12 @@ import { SET_APPLICATION_DATA, SET_DAY, SET_INTERVIEW, SET_ID } from "reducers/a
 
 export default function useApplicationData() {
 
-  const [state, dispatch] = useReducer(reducer, { days: [], appointments: {}, interviewers: {}, day: "Monday", clientId:null});
+  const [state, dispatch] = useReducer(reducer, { days: [], appointments: {}, interviewers: {}, day: "Monday", clientId: null });
 
   useEffect(() => {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8001');
 
+    //Keep connection alive
     setInterval(() => {
       webSocket.send('ping');
     }, 10000);
@@ -18,8 +19,9 @@ export default function useApplicationData() {
 
       const msg = JSON.parse(event.data);
 
-      if(msg.type === "SET_ID"){
-        dispatch({type:SET_ID, value: msg.id});
+      //Assign ID to client 
+      if (msg.type === "SET_ID") {
+        dispatch({ type: SET_ID, value: msg.id });
       }
 
       if (msg.type === "SET_INTERVIEW") {
@@ -51,19 +53,19 @@ export default function useApplicationData() {
   function bookInterview(id, interview) {
 
     return axios.put(`/api/appointments/${id}`, {
-      interview, 
+      interview,
       clientId: state.clientId
     })
       .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview} })
+        dispatch({ type: SET_INTERVIEW, value: { id, interview } })
       });
   }
 
   function cancelInterview(id) {
 
-    return axios.delete(`/api/appointments/${id}`, {data: {clientId: state.clientId}})
+    return axios.delete(`/api/appointments/${id}`, { data: { clientId: state.clientId } })
       .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview: null} })
+        dispatch({ type: SET_INTERVIEW, value: { id, interview: null } })
       });
   }
   return { state, setDay, bookInterview, cancelInterview }
