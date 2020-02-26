@@ -15,9 +15,11 @@ export default function reducer(state, action){
       return {...state, clientId: action.value}
 
     case SET_INTERVIEW: {
-      //updateSpots only true from websocket calls, to prevent double updating
       const { id, interview, clientId } = action.value;
 
+      /*If the id from server matches users id,
+        Skip since state had been already updated locally
+      */
       if(clientId === state.clientId){
         return state;
       }

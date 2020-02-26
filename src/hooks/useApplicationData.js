@@ -7,6 +7,7 @@ export default function useApplicationData() {
 
   const [state, dispatch] = useReducer(reducer, { days: [], appointments: {}, interviewers: {}, day: "Monday", clientId: null });
 
+  //Websocket setup in this useeffect call. If using original scheduler-api, remove.
   useEffect(() => {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8001');
 
@@ -19,7 +20,7 @@ export default function useApplicationData() {
 
       const msg = JSON.parse(event.data);
 
-      //Assign ID to client 
+      //Assign ID from server to client 
       if (msg.type === "SET_ID") {
         dispatch({ type: SET_ID, value: msg.id });
       }
@@ -51,7 +52,7 @@ export default function useApplicationData() {
   const setDay = day => dispatch({ type: SET_DAY, value: { day } });
 
   function bookInterview(id, interview) {
-
+    //Send client ID, so server can respond with it
     return axios.put(`/api/appointments/${id}`, {
       interview,
       clientId: state.clientId
@@ -62,7 +63,7 @@ export default function useApplicationData() {
   }
 
   function cancelInterview(id) {
-
+    //Send client ID, so server can respond with it
     return axios.delete(`/api/appointments/${id}`, { data: { clientId: state.clientId } })
       .then(res => {
         dispatch({ type: SET_INTERVIEW, value: { id, interview: null } })
