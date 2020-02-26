@@ -33,7 +33,7 @@ export default function Appointment(props) {
     if (mode === "SHOW" && !props.interview) {
       transition("EMPTY");
     }
-  }, [props.interview, transition, mode]);
+  }, [props.interview]);
 
   function save(name, interviewer) {
 
