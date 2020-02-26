@@ -26,14 +26,15 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
   //conditional checks in case of API update
-  useEffect((mode, transition) => {
+  useEffect(() => {
+    console.log('ran', mode, props.interview)
     if (mode === "EMPTY" && props.interview) {
       transition("SHOW");
     }
     if (mode === "SHOW" && !props.interview) {
       transition("EMPTY");
     }
-  }, [props.interview]);
+  }, [props.interview, transition, mode]);
 
   function save(name, interviewer) {
 
