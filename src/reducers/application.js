@@ -16,7 +16,7 @@ export default function reducer(state, action){
 
     case SET_INTERVIEW: {
       //updateSpots only true from websocket calls, to prevent double updating
-      const { id, interview, updateSpots, clientId } = action.value;
+      const { id, interview, clientId } = action.value;
 
       if(clientId === state.clientId){
         return state;
@@ -27,9 +27,9 @@ export default function reducer(state, action){
 
       //null interview incoming -> one more spot available
       //null appointment interview in state -> something being booked, one fewer spots
-      if (updateSpots && interview === null) {
+      if (interview === null) {
         newDays = state.days.map(day => day.appointments.includes(id) ? { ...day, spots: day.spots + 1 } : day);
-      } else if (updateSpots && state.appointments[id].interview === null) {
+      } else if (state.appointments[id].interview === null) {
         newDays = state.days.map(day => day.appointments.includes(id) ? { ...day, spots: day.spots - 1 } : day);
       }
 

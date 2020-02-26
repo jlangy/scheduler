@@ -23,7 +23,7 @@ export default function useApplicationData() {
       }
 
       if (msg.type === "SET_INTERVIEW") {
-        dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, updateSpots: true, clientId: msg.clientId } })
+        dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, clientId: msg.clientId } })
       }
     }
   }, [])
@@ -61,7 +61,7 @@ export default function useApplicationData() {
 
   function cancelInterview(id) {
 
-    return axios.delete(`/api/appointments/${id}`, {clientId: state.clientId})
+    return axios.delete(`/api/appointments/${id}`, {data: {clientId: state.clientId}})
       .then(res => {
         dispatch({ type: SET_INTERVIEW, value: { id, interview: null} })
       });
