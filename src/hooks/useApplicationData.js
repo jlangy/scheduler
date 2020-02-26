@@ -31,7 +31,7 @@ export default function useApplicationData() {
     setInterval(() => {
       console.log('pinged')
       webSocket.send('ping');
-    }, 20000);
+    }, 2000);
 
     webSocket.onmessage = function (event) {
 
