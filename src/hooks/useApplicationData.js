@@ -28,13 +28,11 @@ export default function useApplicationData() {
   useEffect(() => {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8001');
     // const webSocket = new WebSocket('ws://localhost:8001');
+    setInterval(() => {
+      webSocket.send('PING');
+    }, 20000);
 
     webSocket.onmessage = function (event) {
-
-      //keep alive
-      setInterval(() => {
-        webSocket.send('ping');
-      }, 30000);
 
       const msg = JSON.parse(event.data);
 
