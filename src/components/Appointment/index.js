@@ -9,7 +9,6 @@ import Confirm from "./Confirm";
 import Error from "./Error";
 import useVisualMode from "hooks/useVisualMode"
 
-
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -26,7 +25,7 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(props.interview ? SHOW : EMPTY);
 
   //conditional checks in case of API update
-  useEffect(() => {
+  useEffect((mode, transition) => {
     if (mode === "EMPTY" && props.interview) {
       transition("SHOW");
     }
