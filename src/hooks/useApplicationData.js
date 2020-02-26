@@ -50,17 +50,17 @@ export default function useApplicationData() {
     return axios.put(`/api/appointments/${id}`, {
       interview
     })
-      .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview} })
-      });
+      // .then(res => {
+      //   dispatch({ type: SET_INTERVIEW, value: { id, interview} })
+      // });
   }
 
   function cancelInterview(id) {
 
     return axios.delete(`/api/appointments/${id}`)
-      .then(res => {
-        dispatch({ type: SET_INTERVIEW, value: { id, interview: null} })
-      });
+      // .then(res => {
+      //   dispatch({ type: SET_INTERVIEW, value: { id, interview: null} })
+      // });
   }
   return { state, setDay, bookInterview, cancelInterview }
 }
