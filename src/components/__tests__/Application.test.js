@@ -9,6 +9,12 @@
 
 // afterEach(cleanup);
 
+describe("fake", () => {
+  it('is true', () => {
+    expect(true).toEqual(true);
+  })
+})
+
 // describe("Application", () => {
 
 //   it("defaults to Monday and changes the schedule when a new day is selected", async () => {
