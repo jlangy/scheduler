@@ -1,6 +1,7 @@
 export const SET_DAY = "SET_DAY";
 export const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 export const SET_INTERVIEW = "SET_INTERVIEW";
+export const SET_ID = "SET_ID";
 
 export default function reducer(state, action){
   switch (action.type) {
@@ -10,9 +11,16 @@ export default function reducer(state, action){
     case SET_APPLICATION_DATA:
       return { ...state, ...action.value }
 
+    case SET_ID:
+      return {...state, clientId: action.value}
+
     case SET_INTERVIEW: {
       //updateSpots only true from websocket calls, to prevent double updating
-      const { id, interview, updateSpots } = action.value;
+      const { id, interview, updateSpots, clientId } = action.value;
+
+      if(clientId === state.clientId){
+        return state;
+      }
 
       //Handle updating spots
       let newDays = state.days;
