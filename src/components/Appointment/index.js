@@ -27,7 +27,6 @@ export default function Appointment(props) {
 
   //conditional checks in case of API update
   useEffect(() => {
-    console.log('ran', mode, props.interview)
     if (mode === "EMPTY" && props.interview) {
       transition("SHOW");
     }
