@@ -8,6 +8,24 @@ export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, { days: [], appointments: {}, interviewers: {}, day: "Monday" });
 
   useEffect(() => {
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8001');
+    // const webSocket = new WebSocket('ws://localhost:8001');
+    setInterval(() => {
+      webSocket.send('ping');
+    }, 2000);
+
+    webSocket.onmessage = function (event) {
+
+      const msg = JSON.parse(event.data);
+
+      if (msg.type === "SET_INTERVIEW") {
+        //update spots in the socket connection
+        dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, updateSpots: true } })
+      }
+    }
+  }, [])
+
+  useEffect(() => {
     const daysPromise = axios.get("/api/days");
     const appointmentsPromise = axios.get("/api/appointments");
     const interviewersPromise = axios.get("/api/interviewers");
@@ -24,25 +42,6 @@ export default function useApplicationData() {
         });
       });
   }, []);
-
-  useEffect(() => {
-    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8001');
-    // const webSocket = new WebSocket('ws://localhost:8001');
-    setInterval(() => {
-      console.log('pinged')
-      webSocket.send('ping');
-    }, 2000);
-
-    webSocket.onmessage = function (event) {
-
-      const msg = JSON.parse(event.data);
-
-      if (msg.type === "SET_INTERVIEW") {
-        //update spots in the socket connection
-        dispatch({ type: SET_INTERVIEW, value: { interview: msg.interview, id: msg.id, updateSpots: true } })
-      }
-    }
-  }, [])
 
   const setDay = day => dispatch({ type: SET_DAY, value: { day } });
 
